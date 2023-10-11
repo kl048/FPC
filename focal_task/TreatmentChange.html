@@ -1,0 +1,26 @@
+{{ block title }}
+{{ endblock }}
+
+{{ block content }}
+
+
+        <p>
+            <b>Instructions</b>
+        </p>
+<hr>
+<p>
+    {{ if session.config.session_treatment == "YES_NO" }} <b> The price environment is about to change.
+    Starting in this period, you can set prices above 28.
+    Please pay attention to the tables provided on your screen. </b>
+</p>
+{{ else }}
+<p>
+    <b>The price environment is about to change.
+        Starting in this period, the maximum price you can set is 28.
+        Please pay attention to the tables provided on your screen. </b>
+</p>
+{{ endif }}
+
+{{ next_button }}
+
+{{ endblock }}
