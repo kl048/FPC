@@ -65,7 +65,7 @@ class Player(BasePlayer):
     quiz7_wrong = models.IntegerField(initial=0)
 
 
-class CRT(Page):
+class crt(Page):
     form_model = 'player'
     form_fields = ['quiz7', 'quiz1', 'quiz2', 'quiz3', 'quiz4', 'quiz5', 'quiz6']
 
@@ -106,7 +106,7 @@ class CRT(Page):
 
 
 
-class Next(Page):
+class next(Page):
 
         @staticmethod
         def is_displayed(player: Player):
@@ -118,4 +118,4 @@ class Next(Page):
 
 
 
-page_sequence = [CRT, Next]
+page_sequence = [crt, next]
