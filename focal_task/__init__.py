@@ -1,4 +1,3 @@
-import random
 import sys
 
 from otree.api import *

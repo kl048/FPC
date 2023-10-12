@@ -2,8 +2,7 @@ import sys
 
 from otree.api import *
 
-import pandas as pd
-import openpyxl
+import pandas as
 
 class CRT(Page):
     solutions = {
