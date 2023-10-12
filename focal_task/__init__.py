@@ -3,9 +3,6 @@ import sys
 
 from otree.api import *
 
-import pandas as pd
-import openpyxl
-
 c = cu
 
 doc = 'Focal point'
