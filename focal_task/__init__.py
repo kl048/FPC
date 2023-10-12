@@ -579,7 +579,7 @@ class WaitingResults(WaitPage):
     after_all_players_arrive = set_results
 
 
-class Results(Page):
+class results(Page):
     form_model = 'player'
 
     @staticmethod
