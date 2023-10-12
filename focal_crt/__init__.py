@@ -2,7 +2,6 @@ import sys
 
 from otree.api import *
 
-import pandas as
 
 class CRT(Page):
     solutions = {
