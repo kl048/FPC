@@ -637,6 +637,6 @@ page_sequence = [
     Waitforteam,
     ChatDecide,
     WaitingResults,
-    Results,
+    results,
     EndTask
 ]
