@@ -2,46 +2,70 @@
 {{ block title }}Results - Period {{ player.round_number }}{{ endblock }}
 
 {{ block content }}
-
-{ block title }}Results{{ endblock }}
-{{ block content }}
-    <table class="table mb-5">
-        <tr>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <table class="table mb-5">
+          <tr>
             <th>The price you entered</th>
             <td>{{ player.price }} {{ C.ECU_LABEL }}</td>
-        </tr>
-        <tr>
+          </tr>
+          <tr>
             <th>Your firm's price</th>
             <td>{{ group.price }} {{ C.ECU_LABEL }}</td>
-        </tr>
-        <tr>
+          </tr>
+          <tr>
             <th>Your payoff</th>
             <td>{{ payoff }} {{ C.ECU_LABEL }}</td>
-        </tr>
-        <tr>
+          </tr>
+          <tr>
             <th>Your cumulative payoff</th>
-            <td> {{ cumulative_payoff }} {{ C.ECU_LABEL }}</td>
-        </tr>
-    </table>
+            <td>{{ cumulative_payoff }} {{ C.ECU_LABEL }}</td>
+          </tr>
+        </table>
 
-    {{ if session.config.num_firms == 2 }}
-    <h4> Price selected by another firm </h4>
-    {{ else }}
-    <h4>Price selected by other firms </h4>
-    {{ endif }}
+        {% if session.config.num_firms == 2 %}
+          <h4> Price selected by another firm </h4>
+        {% else %}
+          <h4>Price selected by other firms </h4>
+        {% endif %}
 
-    <table class="table w-50 my-3">
-        <tr>
-            <th>Firm </th>
+        <table class="table w-100 my-3">
+          <tr>
+            <th>Firm</th>
             <th>Price</th>
-        </tr>
-        {{ for color, price in other_firms }}
+          </tr>
+          {% for color, price in other_firms %}
             <tr>
-                <th>{{ color }}</th>
-                <th>{{ price }} {{ C.ECU_LABEL }}</th>
+              <td>{{ color }}</td>
+              <td>{{ price }} {{ C.ECU_LABEL }}</td>
             </tr>
-        {{ endfor }}
-    </table>
+          {% endfor %}
+        </table>
+      </div>
+      <div class="col">
+        {% if group_color == "A" %}
+          {% if phase == "YES" %}
+            <p><img class="profile1" src="{% static "images/A/yes_1.png" %}" alt="image" style="width: 100%; height: auto;"/></p>
+            <p><img class="profile" src="{% static "images/A/yes_2.png" %}" alt="image" style="width: 100%; height: auto;"/></p>
+          {% else %}
+            <p><img class="profile1" src="{% static "images/A/no_1.png" %}" alt="image" style="width: 100%; height: auto;"/></p>
+            <p><img class="profile" src="{% static "images/A/no_2.png" %}" alt="image" style="width: 100%; height: auto;"/></p>
+            <p><img class="profile" src="{% static "images/A/no_3.png" %}" alt="image" style="width: 100%; height: auto;"/></p>
+          {% endif %}
+        {% else %}
+          {% if phase == "YES" %}
+            <p><img class="profile1" src="{% static "images/B/yes_1.png" %}" alt="image" style="width: 100%; height: auto;"/></p>
+            <p><img class="profile" src="{% static "images/B/yes_2.png" %}" alt="image" style="width: 100%; height: auto;"/></p>
+          {% else %}
+            <p><img class="profile1" src="{% static "images/B/no_1.png" %}" alt="image" style="width: 100%; height: auto;"/></p>
+            <p><img class="profile" src="{% static "images/B/no_2.png" %}" alt="image" style="width: 100%; height: auto;"/></p>
+            <p><img class="profile" src="{% static "images/B/no_3.png" %}" alt="image" style="width: 100%; height: auto;"/></p>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
 
     {{ next_button }}
 

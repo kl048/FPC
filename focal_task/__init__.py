@@ -362,36 +362,6 @@ class Player(BasePlayer):
     num_failed_attempts = models.IntegerField(initial=0)
     failed_too_many = models.BooleanField(initial=False)
 
-    teamquiz1 = models.StringField(
-        label='Which is the largest state in the U.S. (by area)?'
-    )
-    teamquiz1_wrong = models.IntegerField(initial=0)
-
-    teamquiz2 = models.StringField(
-        label='What is the third sign of the zodiac?'
-    )
-    teamquiz2_wrong = models.IntegerField(initial=0)
-
-    teamquiz3 = models.StringField(
-        label='Which natural disaster is measured with a Richter scale?'
-    )
-    teamquiz3_wrong = models.IntegerField(initial=0)
-
-    teamquiz4 = models.IntegerField(
-        label='How many Amendments does the US constitution have?'
-    )
-    teamquiz4_wrong = models.IntegerField(initial=0)
-
-    teamquiz5 = models.StringField(
-        label='Which planet is known as the red planet?'
-    )
-    teamquiz5_wrong = models.IntegerField(initial=0)
-
-    teamquiz6 = models.IntegerField(
-        label='Please enter your label (the number assigned to you).'
-    )
-    teamquiz6_wrong = models.IntegerField(initial=0)
-
 
 def set_results(subsession: Subsession):
     set_payoffs(subsession)
@@ -510,82 +480,9 @@ def calculate_possible_profit_other_firm(player: Player, other_price, my_price):
 
 
 # PAGES
-class Introduction(Page):
-    form_model = 'player'
-
-
-class instructions (Page):
-    form_model = 'player'
-
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.round_number == 1
-
 class Waitforteam(WaitPage):
     wait_for_all_groups = True
     pass
-
-
-class Teamchat(Page):
-    form_model = 'player'
-    form_fields = ['teamquiz6', 'teamquiz1', 'teamquiz2', 'teamquiz3', 'teamquiz4', 'teamquiz5']
-
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.round_number == 1
-
-    @staticmethod
-    def get_timeout_seconds(player: Player):
-        if player.round_number == 1:
-            timeout_seconds = 300
-        else:
-            timeout_seconds = 301
-        return timeout_seconds
-
-    @staticmethod
-    def vars_for_template(player: Player):
-        participant = player.participant
-        group = player.group
-        return dict(
-            suggestions=[(p.participant.uuid, p.suggestion) for p in group.get_players() if
-                         p.field_maybe_none('suggestion')],
-            player_uuid=get_employee_to_move(group).participant.uuid,
-            nickname=f'Player {participant.uuid}'
-        )
-
-    @staticmethod
-    def error_message(player: Player, values):
-        # alternatively, you could make quiz1_error_message, quiz2_error_message, etc.
-        # but if you have many similar fields, this is more efficient.
-        solutions = dict(
-            teamquiz1=('ALASKA', 'ALASKA'),
-            teamquiz2=('GEMINI', 'GEMINI'),
-            teamquiz3=('EARTHQUAKE', 'EARTHQUAKE'),
-            teamquiz4=('27', '27'),
-            teamquiz5=('MARS', 'MARS'),
-            teamquiz6=('40', '40'),
-        )
-
-        # error_message can return a dict whose keys are field names and whose
-        # values are error messages
-        errors = {
-            k: solutions[k][1] for k, v in values.items() if v != solutions[k][0]
-        }
-
-        for k in errors.keys():
-            num = getattr(player, f'{k}_wrong')
-            setattr(player, f'{k}_wrong', num + 1)
-
-        # print('errors is', errors)
-        if errors:
-            player.num_failed_attempts += 1
-            if player.num_failed_attempts >= 1:
-                player.failed_too_many = True
-                # we don't return any error here; just let the user proceed to the
-                # next page, but the next page is the 'suggest" page where the game starts
-            else:
-                return errors
-
 
 class WaitSuggestions(WaitPage):
     pass
@@ -597,7 +494,7 @@ class ChatDecide(Page):
 
     @staticmethod
     def get_timeout_seconds(player: Player):
-        if player.round_number in [1, 2, 26, 27]:
+        if player.round_number in [1, 2, 21, 26]:
             timeout_seconds = 180
         else:
             timeout_seconds = 60
@@ -607,7 +504,7 @@ class ChatDecide(Page):
     def js_vars(player):
         sec_to_hide_btn = 0
 
-        if player.round_number in [1, 2, 26, 27]:
+        if player.round_number in [1, 2, 21, 26]:
             sec_to_hide_btn = 60
         else:
             sec_to_hide_btn = 30
@@ -695,10 +592,11 @@ class Results(Page):
         return dict(
             payoff=int(player.payoff),
             cumulative_payoff=int(player.participant.payoff),
-            employee_to_move=get_employee_to_move(player.group),
             other_firms=[(g.color, g.price) for g in player.subsession.get_groups() if g != group],
+            phase=player.session_phase,
+            group_color=group.color,
+            other_group_color=[g.color for g in player.subsession.get_groups() if g != group][0],
         )
-
 
 class SubjectMovingGroupWarning(Page):
     @staticmethod
