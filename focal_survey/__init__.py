@@ -134,25 +134,25 @@ class Player(BasePlayer):
     )
 
 
-class Demographics(Page):
+class demographics(Page):
     form_model = 'player'
     form_fields = ['age', 'gender', 'major', 'econ', 'uni', 'gpa']
 
 
-class TIPI(Page):
+class tipi(Page):
     form_model = 'player'
     form_fields = ['Extraverted_enthusiastic','Critical_quarrelsome','Dependable_self_disciplined','Anxious_easily_upset',
                    'Open_to_new_experiences_complex','Reserved_quiet','Sympathetic_warm','Disorganized_careless',
                    'Calm_emotionally_stable','Conventional_uncreative']
 
 
-class Behavioral(Page):
+class behavioral(Page):
     form_model = 'player'
     form_fields = ['reasoning', 'risk_preference', 'time_discounting', 'trust', 'positive_reciprocity', 'negative_reciprocity']
 
 
-class Thankyou(Page):
+class thankyou(Page):
     pass
 
 
-page_sequence = [Demographics, TIPI, Behavioral, Thankyou]
+page_sequence = [demographics, tipi, behavioral, thankyou]
