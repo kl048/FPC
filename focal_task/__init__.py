@@ -346,17 +346,21 @@ class Player(BasePlayer):
         min=C.PRICE_MIN)
     price = models.IntegerField(label='What is the price you want to set for your firm?', min=C.PRICE_MIN)
 
-    def price_max(player):
-        max_price = C.PRICE_MAX
-        if player.session_phase == "YES":
-            max_price = 28
-        return max_price
+    max_price = models.IntegerField()
 
     price_timeout = models.BooleanField(initial=False)
     is_winner = models.BooleanField()
     moved = models.BooleanField()
     num_failed_attempts = models.IntegerField(initial=0)
     failed_too_many = models.BooleanField(initial=False)
+
+
+def price_max(player: Player):
+    max_price = C.PRICE_MAX
+    if player.session_phase == "YES":
+        player.max_price = 28
+        max_price = 28
+    return max_price
 
 
 def set_results(subsession: Subsession):
@@ -480,6 +484,7 @@ class Waitforteam(WaitPage):
     wait_for_all_groups = True
     pass
 
+
 class WaitSuggestions(WaitPage):
     pass
 
@@ -570,7 +575,7 @@ class ChatDecide(Page):
     def before_next_page(player: Player, timeout_happened):
         if timeout_happened:
             from random import randint
-            player.price = randint(C.PRICE_MIN, player.price_max())
+            player.price = randint(C.PRICE_MIN, player.max_price)
             player.price_timeout = True
 
 
@@ -594,6 +599,7 @@ class results(Page):
             other_group_color=[g.color for g in player.subsession.get_groups() if g != group][0],
         )
 
+
 class SubjectMovingGroupWarning(Page):
     @staticmethod
     def vars_for_template(player: Player):
@@ -606,6 +612,7 @@ class SubjectMovingGroupWarning(Page):
     def is_displayed(player: Player):
         return player.round_number == 17
 
+
 class TreatmentChange(Page):
     @staticmethod
     def vars_for_template(player: Player):
@@ -617,6 +624,8 @@ class TreatmentChange(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == 26
+
+
 class EndTask(Page):
     @staticmethod
     def is_displayed(player: Player):
