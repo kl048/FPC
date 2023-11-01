@@ -16,6 +16,7 @@ class C(BaseConstants):
     NUM_ROUNDS_PROB = 50
     PRICE_MIN = cu(0)
     PRICE_MAX = cu(49)
+    NO_PRICE_MAX = cu(100)
     COLORS = ['A', 'B']
     NUM_CUSTOMERS = 200
     INSTRUCTIONS_TEMPLATE = 'focal/instructions.html'
@@ -346,7 +347,7 @@ class Player(BasePlayer):
         min=C.PRICE_MIN)
     price = models.IntegerField(label='What is the price you want to set for your firm?', min=C.PRICE_MIN)
 
-    max_price = models.IntegerField()
+    max_price = models.CurrencyField()
 
     price_timeout = models.BooleanField(initial=False)
     is_winner = models.BooleanField()
@@ -356,7 +357,8 @@ class Player(BasePlayer):
 
 
 def price_max(player: Player):
-    max_price = C.PRICE_MAX
+    max_price = C.NO_PRICE_MAX
+    player.max_price = max_price
     if player.session_phase == "YES":
         player.max_price = 28
         max_price = 28
