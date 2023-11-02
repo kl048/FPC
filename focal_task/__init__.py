@@ -357,7 +357,7 @@ class Player(BasePlayer):
 
 
 def price_max(player: Player):
-    max_price = C.NO_PRICE_MAX
+    max_price = cu(sys.maxsize)
     player.max_price = max_price
     if player.session_phase == "YES":
         player.max_price = 28
@@ -513,7 +513,8 @@ class ChatDecide(Page):
             sec_to_hide_btn = 30
 
         return dict(
-            sec_to_hide_btn=sec_to_hide_btn
+            sec_to_hide_btn=sec_to_hide_btn,
+            session_phase=player.session_phase
         )
 
     @staticmethod
@@ -577,8 +578,12 @@ class ChatDecide(Page):
     def before_next_page(player: Player, timeout_happened):
         if timeout_happened:
             from random import randint
-            player.price = randint(C.PRICE_MIN, player.max_price)
+            if player.session_phase == "YES":
+                player.price = randint(C.PRICE_MIN, player.max_price)
+            else:
+                player.price = randint(C.PRICE_MIN, C.NO_PRICE_MAX)
             player.price_timeout = True
+        player.max_price = 0
 
 
 class WaitingResults(WaitPage):

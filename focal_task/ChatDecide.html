@@ -271,6 +271,7 @@
         $(function () {
             let wrapper = $('<div class="input-group mb-3"></div>');
             let sec_to_hide_btn = js_vars.sec_to_hide_btn;
+            let session_phase = js_vars.session_phase;
 
             $(".otree-btn-next").hide();
             $("#calculator-submit").hide();
@@ -313,9 +314,18 @@
 
             $("#calculator-submit").on("click", function (e) {
                 let entered_price = parseInt($("#my_price").val());
+
+                if (session_phase === "YES"){
+                    if (entered_price > 28) {
+                        alert("Price must be less than or equal to 28.");
+                        return;
+                    }
+                }
+
                 if (isNaN(entered_price)) {
                     return;
                 }
+
                 $('#id_price').val(entered_price);
                 chatInput.val(
                     'This participant has submitted their price decision and left the page'
